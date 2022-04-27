@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  # https://container-registry.oracle.com/ords/f?p=113:4:105228129263775:::4:P4_REPOSITORY,AI_REPOSITORY,AI_REPOSITORY_NAME,P4_REPOSITORY_NAME,P4_EULA_ID,P4_BUSINESS_AREA_ID:803,803,Oracle%20Database%20Express%20Edition,Oracle%20Database%20Express%20Edition,1,0&cs=3S4TpSEzkTMn1aJYBheEXpYWOFuyIXTIGh6YRiF_3x50dcXUtbc6bXOHGSsKF68CrnMl4GR3WGfXOTyJoISQrLg
+  # https://localhost:5500/em/
+  oracle-db:
+    image: container-registry.oracle.com/database/express:latest
+    environment:
+      - ORACLE_PWD=password
+    volumes:
+      - oracle:/opt/oracle/oradata
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+
+volumes:
+  oracle:
