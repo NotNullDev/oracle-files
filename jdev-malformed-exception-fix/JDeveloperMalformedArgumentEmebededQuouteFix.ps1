@@ -1,12 +1,16 @@
 ﻿$oracleHome = $env:oracle_home
 
-if(!$oracleHome) {
+# padding
+Write-Output "`n"
+
+if (!$oracleHome) {
 
     Write-Output "ORACLE_HOME NOT DEFINED."
-    $oracleHome = Read-Host "Please provide path to oracle home (by default c:/oracle/middleware/oracle_home ) :"
+    $oracleHome = Read-Host "Please provide path to oracle home (by default c:/oracle/middleware/oracle_home ) "
+    $oracleHome = $oracleHome.Trim()
 
-    if(Test-Path $oracleHome) {
-        Write-Output "Using ORACLE_HOME $oracleHome"
+    if (Test-Path $oracleHome) {
+        Write-Output "Using ORACLE_HOME=$oracleHome"
     } else {
         Write-Output "Provided path: $oracleHome does't exist. Please try again."
         return;
@@ -14,7 +18,7 @@ if(!$oracleHome) {
 }
 
 $confFile = "$oracleHome/jdeveloper/ide/bin/ide.conf"
-
+$confFileBk = "$confFile.bk"
 if (!(Test-Path $confFile)) {
     Write-Output "Error: config file $confFile doesn't exist. Please verify ORACLE_HOME installation and try again."
     return;
@@ -22,8 +26,8 @@ if (!(Test-Path $confFile)) {
 
 try {
     
-    Write-Output "Creating ide.conf backup ($confFile)"
-    Copy-Item $confFile $oracleHome/jdeveloper/ide/bin/ide.conf.bk
+    Write-Output "Creating ide.conf backup ($confFileBk)"
+    Copy-Item $confFile $confFileBk
 
     $fix = {
 
@@ -34,14 +38,14 @@ try {
 
     Add-Content -Value $fix -Path $confFile
 
-    Write-Host -ForegroundColor Green  "Sucess"
+    Write-Host -ForegroundColor Green  "`nSucess"
 
     $addedLines = Get-Content -Tail 3 $confFile
 
-    Write-Host -ForegroundColor Green "Added lines:"
-    Write-Host -ForegroundColor Green $addedLines
+    Write-Host -ForegroundColor Green "`Added lines:`n"
+    Write-Host -ForegroundColor Green "$addedLines `n"
 
-    Write-Host -ForegroundColor Green "Path to current config file: $confFile"
+    Write-Host -ForegroundColor Yellow "`Path to current config file: $confFile"
 
 } catch {
 
@@ -49,3 +53,5 @@ try {
     Write-Host -ForegroundColor Red $_
 
 }
+# padding
+Write-Host "`n"
